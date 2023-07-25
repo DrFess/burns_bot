@@ -2,7 +2,7 @@ import datetime
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from db.models import User, Case, Data, Drunk, Eaten
+from db.models import User, Case, Data, Drunk, Eaten, Calla, Urine
 from db.settings import engine
 
 
@@ -61,6 +61,30 @@ def add_one_drink(case_id, data):
             case_id=case_id,
             date=datetime.datetime.today(),
             drunk=data
+        )
+        session.add(item)
+        session.commit()
+    return True
+
+
+def add_one_calla(case_id, data):
+    with Session(engine) as session:
+        item = Calla(
+            case_id=case_id,
+            date=datetime.datetime.today(),
+            calla=data
+        )
+        session.add(item)
+        session.commit()
+    return True
+
+
+def add_one_urine(case_id, data):
+    with Session(engine) as session:
+        item = Urine(
+            case_id=case_id,
+            date=datetime.datetime.today(),
+            urine=data
         )
         session.add(item)
         session.commit()

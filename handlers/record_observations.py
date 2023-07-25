@@ -6,7 +6,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardButton
 
 from buttons.keyboards import metering_menu
-from db.commands import get_all_cases, add_one_drink, add_one_eaten
+from db.commands import get_all_cases, add_one_drink, add_one_eaten, add_one_calla, add_one_urine
 
 router = Router()
 
@@ -81,4 +81,28 @@ async def input_drink(message: Message, state: FSMContext):
         data=data,
     )
     await message.answer('Запись о количестве выпитого добавлена. Продолжим вводить данные?', reply_markup=metering_menu)
+    await state.set_state(Observation.allocation)
+
+
+@router.message(Observation.calla)
+async def input_calla(message: Message, state: FSMContext):
+    case_id = await state.get_data()
+    data = message.text
+    add_one_calla(
+        case_id=case_id['case_id'],
+        data=data,
+    )
+    await message.answer('Запись о количестве раз стула добавлена. Продолжим вводить данные?', reply_markup=metering_menu)
+    await state.set_state(Observation.allocation)
+
+
+@router.message(Observation.urine)
+async def input_calla(message: Message, state: FSMContext):
+    case_id = await state.get_data()
+    data = message.text
+    add_one_urine(
+        case_id=case_id['case_id'],
+        data=data,
+    )
+    await message.answer('Запись о количестве полученной мочи добавлена. Продолжим вводить данные?', reply_markup=metering_menu)
     await state.set_state(Observation.allocation)
