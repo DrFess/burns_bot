@@ -31,6 +31,17 @@ metering_menu = ReplyKeyboardMarkup(
         [KeyboardButton(text='Сколько выпито')],
         [KeyboardButton(text='Стул(количество раз за день)')],
         [KeyboardButton(text='Разовая порция мочи')],
+        [KeyboardButton(text='Нет. Вернуться к прошлому меню')]
     ],
+    resize_keyboard=True
+)
+
+index_menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text='показатель 1')],
+        [KeyboardButton(text='показатель 2')],
+        [KeyboardButton(text='показатель 3')],
+    ],
+    one_time_keyboard=True,
     resize_keyboard=True
 )

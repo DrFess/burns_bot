@@ -5,7 +5,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardButton
 
-from buttons.keyboards import metering_menu
+from buttons.keyboards import metering_menu, case_registration
 from db.commands import get_all_cases, add_one_drink, add_one_eaten, add_one_calla, add_one_urine
 
 router = Router()
@@ -46,7 +46,7 @@ async def choose_case(callback: CallbackQuery, state: FSMContext):
 async def input_data(message: Message, state: FSMContext):
     if message.text == 'Сколько съедено':
         await state.set_state(Observation.eaten)
-        await message.answer('Сколько было приемов пищи?')
+        await message.answer('Примерно сколько грамм было съедено за последний прием пищи?')
     elif message.text == 'Сколько выпито':
         await state.set_state(Observation.drink)
         await message.answer('Введите объем выпитой жидкости в мл')
@@ -56,6 +56,12 @@ async def input_data(message: Message, state: FSMContext):
     elif message.text == 'Разовая порция мочи':
         await state.set_state(Observation.urine)
         await message.answer('Введите полученной порции мочи в мл')
+    elif message.text == 'Вернуться к прошлому меню':
+        await state.clear()
+        await message.answer(
+            f"Привет {message.from_user.username}, это помощник врачей отделения термической травмы",
+            reply_markup=case_registration
+        )
     else:
         await message.answer('Не понимаю тебя((')
 
