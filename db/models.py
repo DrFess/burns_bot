@@ -1,4 +1,4 @@
-from sqlalchemy import Column, INTEGER, BIGINT, VARCHAR, DATE, ForeignKey
+from sqlalchemy import Column, INTEGER, BIGINT, VARCHAR, DATE, ForeignKey, DateTime
 from sqlalchemy.orm import relationship, DeclarativeBase
 
 from db.settings import engine
@@ -56,7 +56,7 @@ class Drunk(Base):
 
     entry_id = Column(INTEGER, primary_key=True, autoincrement=True)
     case_id = Column(INTEGER, ForeignKey('cases.case_id'))
-    date = Column(DATE, nullable=False, comment='Дата записи')
+    date = Column(DateTime, nullable=False, comment='Дата записи')
     drunk = Column(INTEGER, default=0, comment='Объем выпитой порции')
 
 
@@ -74,7 +74,7 @@ class Urine(Base):
 
     entry_id = Column(INTEGER, primary_key=True, autoincrement=True)
     case_id = Column(INTEGER, ForeignKey('cases.case_id'))
-    date = Column(DATE, nullable=False, comment='Дата записи')
+    date = Column(DateTime, nullable=False, comment='Дата записи')
     urine = Column(INTEGER, default=0, comment='Разовый объем мочи')
 
 

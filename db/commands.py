@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import select
+from sqlalchemy import select, and_
 from sqlalchemy.orm import Session
 from db.models import User, Case, Data, Drunk, Eaten, Calla, Urine
 from db.settings import engine
@@ -89,3 +89,15 @@ def add_one_urine(case_id, data):
         session.add(item)
         session.commit()
     return True
+
+
+def get_urine(case_id, date):
+    with Session(engine) as session:
+        volume = session.query(Urine.urine).filter(Urine.case_id == case_id, Urine.date >= date).all()
+    return volume
+
+
+def get_weight(case_id):
+    with Session(engine) as session:
+        weight = session.query(Case.weight).filter(Case.case_id == case_id)
+    return weight[0][0]

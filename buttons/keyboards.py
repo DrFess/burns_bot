@@ -1,5 +1,4 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
-from aiogram.utils import keyboard
 
 registration_kb = ReplyKeyboardMarkup(
     keyboard=[[KeyboardButton(text='Регистрация')]],
@@ -10,7 +9,8 @@ registration_kb = ReplyKeyboardMarkup(
 case_registration = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text='Зарегистрировать случай госпитализации')],
-        [KeyboardButton(text='Случай уже есть. Перейти к вводу данных')]
+        [KeyboardButton(text='Случай уже есть. Перейти к вводу данных')],
+        [KeyboardButton(text='Получить результаты')]
     ],
     one_time_keyboard=True,
     resize_keyboard=True
@@ -38,7 +38,7 @@ metering_menu = ReplyKeyboardMarkup(
 
 index_menu = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text='показатель 1')],
+        [KeyboardButton(text='Гидробаланс')],
         [KeyboardButton(text='показатель 2')],
         [KeyboardButton(text='показатель 3')],
     ],

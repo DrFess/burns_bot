@@ -55,8 +55,8 @@ async def input_data(message: Message, state: FSMContext):
         await message.answer('Сколько раз был стул?')
     elif message.text == 'Разовая порция мочи':
         await state.set_state(Observation.urine)
-        await message.answer('Введите полученной порции мочи в мл')
-    elif message.text == 'Вернуться к прошлому меню':
+        await message.answer('Введите объем полученной порции мочи в мл')
+    elif message.text == 'Нет. Вернуться к прошлому меню':
         await state.clear()
         await message.answer(
             f"Привет {message.from_user.username}, это помощник врачей отделения термической травмы",
