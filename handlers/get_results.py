@@ -53,4 +53,4 @@ async def get_hydrobalance(message: Message, state: FSMContext):
     search_date = datetime.datetime.now() - delta
     case = await state.get_data()
     result = calculate_hydrobalance(int(case['case']), search_date, int(message.text))
-    await message.answer(f'Диурез за указанное время({message.text}ч.) составил {result} мл/кг/час')
+    await message.answer(f'Диурез за указанное время({message.text}ч.) составил {result} мл/кг/час.')
