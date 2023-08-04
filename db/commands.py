@@ -1,8 +1,8 @@
 import datetime
 
-from sqlalchemy import select, and_
+from sqlalchemy import select
 from sqlalchemy.orm import Session
-from db.models import User, Case, Data, Drunk, Eaten, Calla, Urine
+from db.models import User, Case, Drunk, Eaten, Calla, Urine
 from db.settings import engine
 
 
@@ -91,9 +91,27 @@ def add_one_urine(case_id, data):
     return True
 
 
-def get_urine(case_id, date):
+def get_eaten_per_time(case_id, date):
+    with Session(engine) as session:
+        volume = session.query(Eaten.eaten).filter(Eaten.case_id == case_id, Eaten.date >= date).all()
+    return volume
+
+
+def get_drunk_per_time(case_id, date):
+    with Session(engine) as session:
+        volume = session.query(Drunk.drunk).filter(Drunk.case_id == case_id, Drunk.date == date).all()
+    return volume
+
+
+def get_urine_per_time(case_id, date):
     with Session(engine) as session:
         volume = session.query(Urine.urine).filter(Urine.case_id == case_id, Urine.date >= date).all()
+    return volume
+
+
+def get_calla_per_time(case_id, date):
+    with Session(engine) as session:
+        volume = session.query(Calla.calla).filter(Calla.case_id == case_id, Calla.date >= date).all()
     return volume
 
 

@@ -1,5 +1,3 @@
-import datetime
-
 from aiogram import Router
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
@@ -8,8 +6,8 @@ from aiogram.types import Message, InlineKeyboardButton, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from buttons.keyboards import index_menu
-from db.commands import get_all_cases
-from utils.calculations import calculate_hydrobalance
+from db.commands import get_all_cases, get_eaten_per_time, get_drunk_per_time, get_urine_per_time, get_calla_per_time
+from utils.calculations import calculate_hydrobalance, calculate_date, indicators_per_time
 
 router = Router()
 
@@ -41,16 +39,25 @@ async def menu_results(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer('Выбери показатель', reply_markup=index_menu)
 
 
-@router.message(Text(text='Гидробаланс'), Results.case)
+@router.message(Text(text=['Гидробаланс', 'Сводные данные за время']), Results.case)
 async def per_hours(message: Message, state: FSMContext):
     await message.answer('Укажите за какой промежуток времени нужно рассчитать (в часах)')
     await state.set_state(Results.date)
 
 
 @router.message(Results.date)
-async def get_hydrobalance(message: Message, state: FSMContext):
-    delta = datetime.timedelta(hours=float(message.text))
-    search_date = datetime.datetime.now() - delta
+async def show_summary_data(message: Message, state: FSMContext):
     case = await state.get_data()
-    result = calculate_hydrobalance(int(case['case']), search_date, int(message.text))
-    await message.answer(f'Диурез за указанное время({message.text}ч.) составил {result} мл/кг/час.')
+    date = calculate_date(message.text)
+    eaten = indicators_per_time(int(case['case']), date, get_eaten_per_time)
+    drunk = indicators_per_time(int(case['case']), date, get_drunk_per_time)
+    urine = indicators_per_time(int(case['case']), date, get_urine_per_time)
+    calla = indicators_per_time(int(case['case']), date, get_calla_per_time)
+    diuresis_temp = calculate_hydrobalance(int(case['case']), date, int(message.text))
+    await message.answer(f'За указанное время ({message.text}ч.)\n'
+                         f'Выпито: {drunk:.>20} мл\n'
+                         f'Получено мочи: {urine:.>20} мл\n'
+                         f'Темп диуреза: {diuresis_temp:.>20} мл/кг/час\n'
+                         f'Съедено: {eaten:.>20}\n'
+                         f'Стул был раз: {calla:.>20}\n'
+                         )

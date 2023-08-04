@@ -38,8 +38,7 @@ metering_menu = ReplyKeyboardMarkup(
 
 index_menu = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text='Гидробаланс')],
-        [KeyboardButton(text='показатель 2')],
+        [KeyboardButton(text='Сводные данные за время')],
         [KeyboardButton(text='показатель 3')],
     ],
     one_time_keyboard=True,
