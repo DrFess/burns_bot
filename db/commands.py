@@ -22,6 +22,38 @@ def check_user(telegram_id):
     return False
 
 
+def show_users_without_moderation():
+    users_list = []
+    with Session(engine) as session:
+        users = session.query(User).filter(User.is_moderator == False).all()
+        for user in users:
+            users_list.append((user.telegram_id, user.username))
+    return users_list
+
+
+def give_moderation(telegram_id):
+    with Session(engine) as session:
+        user = session.query(User).filter(User.telegram_id == telegram_id).first()
+        user.is_moderator = True
+        session.commit()
+
+
+def show_moderators():
+    users_list = []
+    with Session(engine) as session:
+        users = session.query(User).filter(User.is_moderator == True).all()
+        for user in users:
+            users_list.append((user.telegram_id, user.username))
+    return users_list
+
+
+def delete_moderator(telegram_id):
+    with Session(engine) as session:
+        user = session.query(User).filter(User.telegram_id == telegram_id).first()
+        user.is_moderator = False
+        session.commit()
+
+
 def add_case(case_id, user_id, date_start, age, height, weight):
     with Session(engine) as session:
         case = Case(
@@ -99,7 +131,7 @@ def get_eaten_per_time(case_id, date):
 
 def get_drunk_per_time(case_id, date):
     with Session(engine) as session:
-        volume = session.query(Drunk.drunk).filter(Drunk.case_id == case_id, Drunk.date == date).all()
+        volume = session.query(Drunk.drunk).filter(Drunk.case_id == case_id, Drunk.date >= date).all()
     return volume
 
 

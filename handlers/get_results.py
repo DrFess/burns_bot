@@ -61,3 +61,8 @@ async def show_summary_data(message: Message, state: FSMContext):
                          f'Съедено: {eaten:.>20}\n'
                          f'Стул был раз: {calla:.>20}\n'
                          )
+
+
+@router.message(Text(text='показатель 3'))
+async def test(message: Message):
+    await message.answer(u'\U0001F9AD')

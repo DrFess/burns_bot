@@ -5,9 +5,9 @@ from aiogram import Bot, Dispatcher, Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from buttons.keyboards import registration_kb, case_registration
+from buttons.keyboards import registration_kb, case_registration, moderator_menu
 from db.commands import check_user
-from handlers import registration, adding_case, record_observations, get_results
+from handlers import registration, adding_case, record_observations, get_results, moderations
 
 bot = Bot(token='5915501320:AAH_XlpU5PGh0SB2FNu5uOhKgft32VAtHeo', parse_mode="HTML")
 router = Router()
@@ -24,6 +24,11 @@ async def command_start_handler(message: Message):
         await message.answer(f'Привет! Мы ещё не знакомы. Давай зарегистрируемся?', reply_markup=registration_kb)
 
 
+@router.message(Command(commands=['moderate']))
+async def moderate_menu(message: Message):
+    await message.answer('Включен режим модератора.', reply_markup=moderator_menu)
+
+
 async def main():
     dp = Dispatcher()
     dp.include_routers(
@@ -32,6 +37,7 @@ async def main():
         adding_case.router,
         record_observations.router,
         get_results.router,
+        moderations.router,
     )
 
     await bot.delete_webhook(drop_pending_updates=True)

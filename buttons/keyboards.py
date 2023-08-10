@@ -27,11 +27,11 @@ true_or_false = ReplyKeyboardMarkup(
 
 metering_menu = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text='Сколько съедено')],
-        [KeyboardButton(text='Сколько выпито')],
-        [KeyboardButton(text='Стул(количество раз за день)')],
+        [KeyboardButton(text=u'\U0001F357 Сколько съедено')],
+        [KeyboardButton(text=u'\u2615 Сколько выпито')],
+        [KeyboardButton(text=u'\U0001F4A9 Стул(количество раз за день)')],
         [KeyboardButton(text='Разовая порция мочи')],
-        [KeyboardButton(text='Нет. Вернуться к прошлому меню')]
+        [KeyboardButton(text=u'\U0001F519 Вернуться к прошлому меню')]
     ],
     resize_keyboard=True
 )
@@ -42,5 +42,12 @@ index_menu = ReplyKeyboardMarkup(
         [KeyboardButton(text='показатель 3')],
     ],
     one_time_keyboard=True,
+    resize_keyboard=True
+)
+
+moderator_menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text='Просмотреть всех пользователей без модерации')],
+    ],
     resize_keyboard=True
 )

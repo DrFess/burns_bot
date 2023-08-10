@@ -1,4 +1,4 @@
-from sqlalchemy import Column, INTEGER, BIGINT, VARCHAR, DATE, ForeignKey, DateTime
+from sqlalchemy import Column, INTEGER, BIGINT, VARCHAR, DATE, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship, DeclarativeBase
 
 from db.settings import engine
@@ -13,6 +13,7 @@ class User(Base):
 
     telegram_id = Column(BIGINT, primary_key=True, nullable=False, comment='telegram id пользователя')
     username = Column(VARCHAR(255), unique=False, nullable=True, comment='username пользователя, если он есть')
+    is_moderator = Column(Boolean, default=False, comment='флаг модератора')
 
 
 class Case(Base):
@@ -47,7 +48,7 @@ class Eaten(Base):
 
     entry_id = Column(INTEGER, primary_key=True, autoincrement=True)
     case_id = Column(INTEGER, ForeignKey('cases.case_id'))
-    date = Column(DATE, nullable=False, comment='Дата записи')
+    date = Column(DateTime, nullable=False, comment='Дата записи')
     eaten = Column(INTEGER, default=0, comment='Объем съеденной порции')
 
 
@@ -65,7 +66,7 @@ class Calla(Base):
 
     entry_id = Column(INTEGER, primary_key=True, autoincrement=True)
     case_id = Column(INTEGER, ForeignKey('cases.case_id'))
-    date = Column(DATE, nullable=False, comment='Дата записи')
+    date = Column(DateTime, nullable=False, comment='Дата записи')
     calla = Column(INTEGER, default=0, comment='Количество стула')
 
 
