@@ -1,3 +1,4 @@
+import os
 import asyncio
 import logging
 
@@ -10,7 +11,7 @@ from buttons.keyboards import registration_kb, main_menu, moderator_menu
 from db.commands import check_user
 from handlers import registration, adding_case, record_observations, get_results, moderations
 
-bot = Bot(token='5915501320:AAH_XlpU5PGh0SB2FNu5uOhKgft32VAtHeo', parse_mode="HTML")
+bot = Bot(token=os.getenv('TOKEN'), parse_mode="HTML")
 router = Router()
 
 
