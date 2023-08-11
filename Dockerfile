@@ -7,5 +7,7 @@ RUN pip3 install --upgrade setuptools
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+CMD [ "python", "db/models.py"]
+
 RUN chmod 755 .
 COPY . .
