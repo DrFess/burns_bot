@@ -7,7 +7,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message, CallbackQuery
 from aiogram3_calendar import SimpleCalendar
 
-from buttons.keyboards import true_or_false, case_registration
+from buttons.keyboards import true_or_false, main_menu
 from db.commands import add_case
 
 router = Router()
@@ -109,5 +109,5 @@ async def database_entry(message: Message, state: FSMContext):
 
 @router.message(Case.confirmation, Text(text='Нет, нужно скорректировать информацию'))
 async def again_case(message: Message, state: FSMContext):
-    await message.answer('Начинаем регистрацию заново', reply_markup=case_registration)
+    await message.answer('Начинаем регистрацию заново', reply_markup=main_menu)
     await state.clear()

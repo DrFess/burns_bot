@@ -2,10 +2,11 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher, Router
-from aiogram.filters import Command
+from aiogram.filters import Command, Text
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from buttons.keyboards import registration_kb, case_registration, moderator_menu
+from buttons.keyboards import registration_kb, main_menu, moderator_menu
 from db.commands import check_user
 from handlers import registration, adding_case, record_observations, get_results, moderations
 
@@ -17,16 +18,31 @@ router = Router()
 async def command_start_handler(message: Message):
     if check_user(message.from_user.id):
         await message.answer(
-            f"Привет {message.from_user.username}, это помощник врачей отделения термической травмы",
-            reply_markup=case_registration
+            f"Привет {message.from_user.username}, это помощник врачей отделения термической травмы\n"
+            f"Подсказки лежат по команде /info",
+            reply_markup=main_menu
         )
     else:
         await message.answer(f'Привет! Мы ещё не знакомы. Давай зарегистрируемся?', reply_markup=registration_kb)
 
 
+@router.message(Command(commands=['info']))
+async def info(message: Message):
+    await message.answer('Команды /start и /menu перезапустят бота\n'
+                         'Команда /moderate включит режим модератора\n'
+                         'Команда /delete_moderator удалить пользователя из модераторов\n'
+                         'Команда /delete_cases удалит все не активные случаи')
+
+
 @router.message(Command(commands=['moderate']))
 async def moderate_menu(message: Message):
     await message.answer('Включен режим модератора.', reply_markup=moderator_menu)
+
+
+@router.message(Text(text='\U0001F519 Назад'))
+async def back(message: Message, state: FSMContext):
+    await state.clear()
+    await message.answer('Основное меню', reply_markup=main_menu)
 
 
 async def main():

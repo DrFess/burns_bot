@@ -2,10 +2,10 @@ from aiogram import Router
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
-from aiogram.types import Message, InlineKeyboardButton, CallbackQuery
+from aiogram.types import Message, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from buttons.keyboards import index_menu
+from buttons.keyboards import index_menu, back_button
 from db.commands import get_all_cases, get_eaten_per_time, get_drunk_per_time, get_urine_per_time, get_calla_per_time
 from utils.calculations import calculate_hydrobalance, calculate_date, indicators_per_time
 
@@ -16,7 +16,6 @@ class Results(StatesGroup):
     start = State()
     case = State()
     date = State()
-    hydrobalance = State()
 
 
 @router.message(Text(text='Получить результаты'))
@@ -39,9 +38,9 @@ async def menu_results(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer('Выбери показатель', reply_markup=index_menu)
 
 
-@router.message(Text(text=['Гидробаланс', 'Сводные данные за время']), Results.case)
-async def per_hours(message: Message, state: FSMContext):
-    await message.answer('Укажите за какой промежуток времени нужно рассчитать (в часах)')
+@router.callback_query(Text(text=['total']), Results.case)
+async def per_hours(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer('Укажите за какой промежуток времени нужно рассчитать (в часах)')
     await state.set_state(Results.date)
 
 
@@ -59,10 +58,7 @@ async def show_summary_data(message: Message, state: FSMContext):
                          f'Получено мочи: {urine:.>20} мл\n'
                          f'Темп диуреза: {diuresis_temp:.>20} мл/кг/час\n'
                          f'Съедено: {eaten:.>20}\n'
-                         f'Стул был раз: {calla:.>20}\n'
+                         f'Стул был раз: {calla:.>20}\n',
+                         reply_markup=ReplyKeyboardMarkup(keyboard=[back_button], resize_keyboard=True)
                          )
-
-
-@router.message(Text(text='показатель 3'))
-async def test(message: Message):
-    await message.answer(u'\U0001F9AD')
+    await state.clear()

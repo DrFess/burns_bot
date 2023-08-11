@@ -1,11 +1,19 @@
 from aiogram import Router
 from aiogram.filters import Text, Command
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardButton
 
-from db.commands import show_users_without_moderation, give_moderation, show_moderators, delete_moderator
+from db.commands import show_users_without_moderation, give_moderation, show_moderators, delete_moderator, \
+    get_all_cases, switch_case_status, delete_cases
 
 router = Router()
+
+
+class Moderation(StatesGroup):
+    get_cases = State()
+    change_case = State()
 
 
 @router.message(Text(text='Просмотреть всех пользователей без модерации'))
@@ -28,7 +36,7 @@ async def make_moderator(callback: CallbackQuery):
     await callback.message.answer(f'Пользователь {user} назначен модератором')
 
 
-@router.message(Command(commands=['удалить_модератора']))
+@router.message(Command(commands=['delete_moderator']))
 async def delete_moderator_step1(message: Message):
     moders = show_moderators()
     if moders:
@@ -46,3 +54,40 @@ async def delete_moderator_step2(callback: CallbackQuery):
     user = callback.data.split(' ')[2]
     delete_moderator(user_id)
     await callback.message.answer(f'Пользователь {user} удален из модераторов')
+
+
+@router.message(Text(text='Изменить статус случая'))
+async def give_case_status(message: Message, state: FSMContext):
+    await state.set_state(Moderation.get_cases)
+    data = get_all_cases()
+    for case in data:
+        if case.is_active is True:
+            await message.answer(f'{case.case_id} - Активный \u2705')
+        else:
+            await message.answer(f'{case.case_id} - Не активный \u274C')
+    await message.answer('Пришлите номер случая чтобы изменить его статус')
+
+
+@router.message(Moderation.get_cases)
+async def change_case_status(message: Message, state: FSMContext):
+    await state.set_state(Moderation.change_case)
+    switch_case_status(int(message.text))
+    data = get_all_cases()
+    for case in data:
+        if case.is_active is True:
+            await message.answer(f'{case.case_id} - Активный \u2705')
+        else:
+            await message.answer(f'{case.case_id} - Не активный \u274C')
+    await message.answer('Продолжим?')
+
+
+@router.message(Moderation.change_case, Command(commands=['delete_cases']))
+async def del_cases(message: Message, state: FSMContext):
+    delete_cases()
+    data = get_all_cases()
+    for case in data:
+        if case.is_active is True:
+            await message.answer(f'{case.case_id} - Активный \u2705')
+        else:
+            await message.answer(f'{case.case_id} - Не активный \u274C')
+    await state.clear()

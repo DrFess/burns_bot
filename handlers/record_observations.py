@@ -5,7 +5,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardButton
 
-from buttons.keyboards import metering_menu, case_registration
+from buttons.keyboards import metering_menu, main_menu
 from db.commands import get_all_cases, add_one_drink, add_one_eaten, add_one_calla, add_one_urine
 
 router = Router()
@@ -44,26 +44,27 @@ async def choose_case(callback: CallbackQuery, state: FSMContext):
 
 @router.message(Observation.allocation)
 async def input_data(message: Message, state: FSMContext):
-    if message.text == 'Сколько съедено':
+    if 'Сколько съедено' in message.text:
         await state.set_state(Observation.eaten)
         await message.answer('Примерно сколько грамм было съедено за последний прием пищи?')
-    elif message.text == 'Сколько выпито':
+    elif 'Сколько выпито' in message.text:
         await state.set_state(Observation.drink)
         await message.answer('Введите объем выпитой жидкости в мл')
-    elif message.text == 'Стул(количество раз за день)':
+    elif 'Стул(количество раз за день)' in message.text:
         await state.set_state(Observation.calla)
         await message.answer('Сколько раз был стул?')
-    elif message.text == 'Разовая порция мочи':
+    elif 'Разовая порция мочи' in message.text:
         await state.set_state(Observation.urine)
         await message.answer('Введите объем полученной порции мочи в мл')
-    elif 'Вернуться к прошлому меню' in message.text:
+    elif f'\U0001F519 Назад' in message.text:
         await state.clear()
         await message.answer(
             f"Привет {message.from_user.username}, это помощник врачей отделения термической травмы",
-            reply_markup=case_registration
+            reply_markup=main_menu
         )
     else:
-        await message.answer('Не понимаю тебя((')
+        await state.clear()
+        await message.answer('Не понимаю тебя((', reply_markup=main_menu)
 
 
 @router.message(Observation.eaten)

@@ -22,10 +22,11 @@ class Case(Base):
     case_id = Column(INTEGER, primary_key=True, unique=True, nullable=False, comment='номер истории болезни')
     user_id = Column(BIGINT, ForeignKey('users.telegram_id'), comment='поле для связи с моделью User')
     user = relationship('User', )
-    date_start = Column(DATE, nullable=False, comment='Дата госпитализации')
+    date_start = Column(DATE, nullable=False, comment='дата госпитализации')
     age = Column(INTEGER, nullable=False, comment='возраст')
     height = Column(INTEGER, nullable=False, comment='рост')
     weight = Column(INTEGER, nullable=False, comment='вес')
+    is_active = Column(Boolean, default=True, comment='открытый/закрытый')
 
     def __repr__(self):
         return f'case_id:{self.case_id} user_id:{self.user_id} date_start:{self.date_start}'
