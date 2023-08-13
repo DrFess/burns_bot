@@ -83,6 +83,3 @@ class Urine(Base):
 def create_table():
     with engine.begin():
         Base.metadata.create_all(engine)
-
-
-create_table()

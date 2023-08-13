@@ -9,6 +9,7 @@ from aiogram.types import Message
 
 from buttons.keyboards import registration_kb, main_menu, moderator_menu
 from db.commands import check_user
+from db.models import create_table
 from handlers import registration, adding_case, record_observations, get_results, moderations
 
 bot = Bot(token=os.getenv('TOKEN'), parse_mode="HTML")
@@ -62,5 +63,6 @@ async def main():
 
 
 if __name__ == "__main__":
+    create_table()
     logging.basicConfig(level=logging.INFO)
     asyncio.run(main())
