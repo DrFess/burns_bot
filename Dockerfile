@@ -7,7 +7,6 @@ RUN pip3 install --upgrade setuptools
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD [ "python", "db/models.py", "bot.py"]
+COPY ./ ./
 
-RUN chmod 755 .
-COPY . .
+RUN chmod -R 777 ./
